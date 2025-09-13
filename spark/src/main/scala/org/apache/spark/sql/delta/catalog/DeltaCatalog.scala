@@ -56,10 +56,12 @@ import org.apache.spark.sql.connector.catalog.TableCapability._
 import org.apache.spark.sql.connector.catalog.TableChange._
 import org.apache.spark.sql.connector.expressions.{FieldReference, IdentityTransform, Literal, NamedReference, Transform}
 import org.apache.spark.sql.connector.write.{LogicalWriteInfo, SupportsTruncate, V1Write, WriteBuilder}
+import org.apache.spark.sql.delta.expressions.SparkUDFExpressionBuilder
 import org.apache.spark.sql.execution.datasources.{DataSource, PartitioningUtils}
-import org.apache.spark.sql.internal.SQLConf
+import org.apache.spark.sql.internal.{SQLConf, SessionState}
 import org.apache.spark.sql.sources.InsertableRelation
 import org.apache.spark.sql.types.{IntegerType, StructField, StructType}
+import org.apache.spark.sql.util.CaseInsensitiveStringMap
 
 
 /**
@@ -73,6 +75,26 @@ class DeltaCatalog extends DelegatingCatalogExtension
 
 
   val spark = SparkSession.active
+  private var _catalogName: String = null
+
+  override def initialize(name: String, options: CaseInsensitiveStringMap): Unit = {
+    _catalogName = name
+    val sessionState = spark.sessionState
+    val newSessionCatalog = new SessionCatalog(
+      () => sessionState.sharedState.externalCatalog,
+      () => sessionState.sharedState.globalTempViewManager,
+      sessionState.functionRegistry,
+      sessionState.tableFunctionRegistry,
+      sessionState.conf,
+      SessionState.newHadoopConf(spark.sparkContext.hadoopConfiguration, sessionState.conf),
+      sessionState.sqlParser,
+      sessionState.resourceLoader,
+      new SparkUDFExpressionBuilder(sessionState.functionRegistry.listFunction())
+    )
+    setDelegateCatalog(new V2SessionCatalog(newSessionCatalog))
+  }
+
+  override def name: String = _catalogName
 
   private lazy val isUnityCatalog: Boolean = {
     val delegateField = classOf[DelegatingCatalogExtension].getDeclaredField("delegate")

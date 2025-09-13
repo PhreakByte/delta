@@ -217,6 +217,30 @@ class CustomCatalogSuite extends QueryTest with SharedSparkSession
     }
   }
 
+  test("switch to secondary DeltaCatalog") {
+    // Reset catalog manager so that the new `spark_catalog` implementation can apply.
+    spark.sessionState.catalogManager.reset()
+    withSQLConf("spark.sql.catalog.other_catalog" ->
+        "org.apache.spark.sql.delta.catalog.DeltaCatalog") {
+      withTable("t") {
+        withDatabase("test") {
+          // Start by using default `spark_catalog` and test SHOW DATABASES command
+          sql("SET CATALOG spark_catalog")
+          sql("CREATE DATABASE test")
+          sql("USE DATABASE test")
+          sql("CREATE TABLE t (id LONG) USING DELTA")
+
+          // Switch to second `other_catalog` catalog and test SHOW DATABASES command
+          sql("SET CATALOG other_catalog")
+          // This fails with the bug
+          sql("CREATE DATABASE test")
+          sql("USE DATABASE test")
+          sql("CREATE TABLE t (id LONG) USING DELTA")
+        }
+      }
+    }
+  }
+
   test("DESCRIBE HISTORY a delta table from DummyCatalog") {
     val tableName = "desc_history_table"
     withTable(tableName) {
