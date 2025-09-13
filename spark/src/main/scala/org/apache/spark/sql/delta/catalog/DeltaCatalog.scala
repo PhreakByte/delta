@@ -56,7 +56,9 @@ import org.apache.spark.sql.connector.catalog.TableCapability._
 import org.apache.spark.sql.connector.catalog.TableChange._
 import org.apache.spark.sql.connector.expressions.{FieldReference, IdentityTransform, Literal, NamedReference, Transform}
 import org.apache.spark.sql.connector.write.{LogicalWriteInfo, SupportsTruncate, V1Write, WriteBuilder}
-import org.apache.spark.sql.delta.expressions.SparkUDFExpressionBuilder
+import org.apache.spark.sql.connector.catalog.CatalogPlugin
+import org.apache.spark.sql.connector.catalog.CatalogPlugin
+import org.apache.spark.sql.execution.datasources.v2.V2SessionCatalog
 import org.apache.spark.sql.execution.datasources.{DataSource, PartitioningUtils}
 import org.apache.spark.sql.internal.{SQLConf, SessionState}
 import org.apache.spark.sql.sources.InsertableRelation
@@ -73,25 +75,20 @@ class DeltaCatalog extends DelegatingCatalogExtension
   with SupportsPathIdentifier
   with DeltaLogging {
 
-
   val spark = SparkSession.active
   private var _catalogName: String = null
 
+  private class DelegatingCatalogExtensionWrapper(
+      delegate: CatalogPlugin,
+      override val name: String) extends DelegatingCatalogExtension {
+    setDelegateCatalog(delegate)
+  }
+
   override def initialize(name: String, options: CaseInsensitiveStringMap): Unit = {
     _catalogName = name
-    val sessionState = spark.sessionState
-    val newSessionCatalog = new SessionCatalog(
-      () => sessionState.sharedState.externalCatalog,
-      () => sessionState.sharedState.globalTempViewManager,
-      sessionState.functionRegistry,
-      sessionState.tableFunctionRegistry,
-      sessionState.conf,
-      SessionState.newHadoopConf(spark.sparkContext.hadoopConfiguration, sessionState.conf),
-      sessionState.sqlParser,
-      sessionState.resourceLoader,
-      new SparkUDFExpressionBuilder(sessionState.functionRegistry.listFunction())
-    )
-    setDelegateCatalog(new V2SessionCatalog(newSessionCatalog))
+    val v2SessionCatalog = new V2SessionCatalog(
+      spark.sessionState.catalogManager.v1SessionCatalog)
+    setDelegateCatalog(new DelegatingCatalogExtensionWrapper(v2SessionCatalog, name))
   }
 
   override def name: String = _catalogName
