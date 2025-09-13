@@ -56,10 +56,14 @@ import org.apache.spark.sql.connector.catalog.TableCapability._
 import org.apache.spark.sql.connector.catalog.TableChange._
 import org.apache.spark.sql.connector.expressions.{FieldReference, IdentityTransform, Literal, NamedReference, Transform}
 import org.apache.spark.sql.connector.write.{LogicalWriteInfo, SupportsTruncate, V1Write, WriteBuilder}
+import org.apache.spark.sql.connector.catalog.CatalogPlugin
+import org.apache.spark.sql.connector.catalog.CatalogPlugin
+import org.apache.spark.sql.execution.datasources.v2.V2SessionCatalog
 import org.apache.spark.sql.execution.datasources.{DataSource, PartitioningUtils}
-import org.apache.spark.sql.internal.SQLConf
+import org.apache.spark.sql.internal.{SQLConf, SessionState}
 import org.apache.spark.sql.sources.InsertableRelation
 import org.apache.spark.sql.types.{IntegerType, StructField, StructType}
+import org.apache.spark.sql.util.CaseInsensitiveStringMap
 
 
 /**
@@ -71,8 +75,23 @@ class DeltaCatalog extends DelegatingCatalogExtension
   with SupportsPathIdentifier
   with DeltaLogging {
 
-
   val spark = SparkSession.active
+  private var _catalogName: String = null
+
+  private class DelegatingCatalogExtensionWrapper(
+      delegate: CatalogPlugin,
+      override val name: String) extends DelegatingCatalogExtension {
+    setDelegateCatalog(delegate)
+  }
+
+  override def initialize(name: String, options: CaseInsensitiveStringMap): Unit = {
+    _catalogName = name
+    val v2SessionCatalog = new V2SessionCatalog(
+      spark.sessionState.catalogManager.v1SessionCatalog)
+    setDelegateCatalog(new DelegatingCatalogExtensionWrapper(v2SessionCatalog, name))
+  }
+
+  override def name: String = _catalogName
 
   private lazy val isUnityCatalog: Boolean = {
     val delegateField = classOf[DelegatingCatalogExtension].getDeclaredField("delegate")
