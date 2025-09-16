@@ -71,7 +71,9 @@ trait OptimizeMetadataOnlyDeltaQuery extends LoggingShims {
     }
 
     def convertValueIfRequired(attrRef: AttributeReference, value: Any): Any = {
-      if (attrRef.dataType == DateType && value != null) {
+      if (attrRef.dataType.isInstanceOf[DecimalType] && value != null) {
+        Decimal(value.asInstanceOf[String])
+      } else if (attrRef.dataType == DateType && value != null) {
         DateTimeUtils.fromJavaDate(value.asInstanceOf[Date])
       } else {
         value
@@ -203,8 +205,13 @@ trait OptimizeMetadataOnlyDeltaQuery extends LoggingShims {
       val dataType = columnAndPhysicalName._1.dataType
       val physicalName = columnAndPhysicalName._2
 
-      Seq(col(s"stats.$minColName.`$physicalName`").cast(dataType).as(s"min.$physicalName"),
-        col(s"stats.$maxColName.`$physicalName`").cast(dataType).as(s"max.$physicalName"),
+      val castType = dataType match {
+        case _: DecimalType => StringType
+        case _ => dataType
+      }
+
+      Seq(col(s"stats.$minColName.`$physicalName`").cast(castType).as(s"min.$physicalName"),
+        col(s"stats.$maxColName.`$physicalName`").cast(castType).as(s"max.$physicalName"),
         col(s"stats.$nullColName.`$physicalName`").as(s"null_count.$physicalName"))
     } ++ Seq(col(s"stats.numRecords").as(s"numRecords"))
 
@@ -315,8 +322,7 @@ trait OptimizeMetadataOnlyDeltaQuery extends LoggingShims {
     def isSupportedDataType(dataType: DataType): Boolean = {
       // DecimalType is not supported because not all the values are correctly stored
       // For example -99999999999999999999999999999999999999 in stats is -1e38
-      (dataType.isInstanceOf[NumericType] && !dataType.isInstanceOf[DecimalType]) ||
-      dataType.isInstanceOf[DateType]
+      dataType.isInstanceOf[NumericType] || dataType.isInstanceOf[DateType]
     }
 
     private def getAggFunctionOptimizable(

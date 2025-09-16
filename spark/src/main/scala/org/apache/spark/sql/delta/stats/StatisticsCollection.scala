@@ -263,6 +263,8 @@ trait StatisticsCollection extends DeltaLogging {
           substring(min(c), 0, stringPrefix)
 
         // Collect all numeric min values
+        case (c, SkippingEligibleDataType(d: DecimalType), true) =>
+          min(c).cast(StringType)
         case (c, SkippingEligibleDataType(_), true) =>
           min(c)
       },
@@ -274,6 +276,8 @@ trait StatisticsCollection extends DeltaLogging {
           udfTruncateMax(max(c))
 
         // Collect all numeric max values
+        case (c, SkippingEligibleDataType(d: DecimalType), true) =>
+          max(c).cast(StringType)
         case (c, SkippingEligibleDataType(_), true) =>
           max(c)
       },
@@ -297,6 +301,8 @@ trait StatisticsCollection extends DeltaLogging {
           getMinMaxStatsSchema(dataType).map { newDataType =>
             StructField(DeltaColumnMapping.getPhysicalName(f), newDataType)
           }
+        case f@StructField(_, SkippingEligibleDataType(d: DecimalType), _, _) =>
+          Some(StructField(DeltaColumnMapping.getPhysicalName(f), StringType))
         case f@StructField(_, SkippingEligibleDataType(dataType), _, _) =>
           Some(StructField(DeltaColumnMapping.getPhysicalName(f), dataType))
         case _ => None
