@@ -175,7 +175,7 @@ class DeltaTable(object):
     def vacuum(self, retentionHours: Optional[float] = None) -> DataFrame:
         command = Vacuum(self._to_proto(), retentionHours).command(session=self._spark.client)
         self._spark.client.execute_command(command)
-        return None  # TODO: Return empty DataFrame
+        return self._spark.createDataFrame([], StructType([]))
 
     vacuum.__doc__ = LocalDeltaTable.vacuum.__doc__
 
