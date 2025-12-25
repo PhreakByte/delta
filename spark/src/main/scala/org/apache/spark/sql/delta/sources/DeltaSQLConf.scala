@@ -1380,6 +1380,12 @@ trait DeltaSQLConfBase extends DeltaSQLConfUtils {
       .booleanConf
       .createWithDefault(false)
 
+  val DELTA_CHECKPOINT_ASYNC_ENABLED =
+    buildConf("checkpoint.async.enabled")
+      .doc("Whether to checkpoint the Delta Log asynchronously.")
+      .booleanConf
+      .createWithDefault(false)
+
   val DELTA_RESOLVE_MERGE_UPDATE_STRUCTS_BY_NAME =
     buildConf("resolveMergeUpdateStructsByName.enabled")
       .internal()

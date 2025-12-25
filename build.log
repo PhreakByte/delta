@@ -1,0 +1,399 @@
+Using /usr/lib/jvm/java-21-openjdk-amd64 as default JAVA_HOME.
+Note, this will be overridden by -java-home if it is set.
+[info] welcome to sbt 1.9.9 (Ubuntu Java 21.0.8)
+[info] loading settings for project app-build-build from plugins.sbt ...
+[info] loading project definition from /app/project/project
+[info] loading settings for project app-build from plugins.sbt ...
+[info] loading project definition from /app/project
+Test parallelization settings: numShardsOpt=None, shardIdOpt=None, testParallelismOpt=None
+numShardsOpt: None
+shardIdOpt: None
+testParallelismOpt: None
+Test parallelization disabled.
+[info] loading settings for project app from build.sbt,version.sbt ...
+[info] resolving key references (31473 settings) ...
+[info] set current project to app (in build file:/app/)
+[warn] there are 8 keys that are not used by any other settings/tasks:
+[warn]
+[warn] * deltaSuiteGenerator / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * goldenTables / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * iceberg / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * icebergShaded / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * icebergTestsShaded / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * kernelBenchmarks / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * sparkV1Filtered / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn] * testDeltaIcebergJar / unidocSourceFilePatterns
+[warn]   +- /app/build.sbt:125
+[warn]
+[warn] note: a setting might still be used by a command; to exclude a key from this `lintUnused` check
+[warn] either append it to `Global / excludeLintKeys` or call .withRank(KeyRanks.Invisible) on the key
+[warn] sbt 0.13 shell syntax is deprecated; use slash syntax instead: spark / Test / testOnly
+[info] scalastyle using config /app/scalastyle-config.xml
+[info] scalastyle Processed 1 file(s)
+[info] scalastyle Found 0 errors
+[info] scalastyle Found 0 warnings
+[info] scalastyle Found 0 infos
+[info] scalastyle Finished in 8 ms
+[success] created output: /app/spark-unified/target
+[info] scalastyle using config /app/scalastyle-config.xml
+[info] Checkstyle complete. No issues found.
+[info] Checkstyle complete. No issues found.
+[info] scalastyle using config /app/scalastyle-config.xml
+[info] scalastyle Processed 0 file(s)
+[info] scalastyle Found 0 errors
+[info] scalastyle Found 0 warnings
+[info] scalastyle Found 0 infos
+[info] scalastyle Finished in 1 ms
+[success] created output: /app/kernel/kernel-api/target
+Fully-qualified classname does not match jar entry:
+  jar entry: META-INF/versions/9/module-info.class
+  class name: module-info.class
+Omitting META-INF/versions/9/module-info.class.
+Fully-qualified classname does not match jar entry:
+  jar entry: META-INF/versions/9/module-info.class
+  class name: module-info.class
+Omitting META-INF/versions/9/module-info.class.
+Fully-qualified classname does not match jar entry:
+  jar entry: META-INF/versions/9/module-info.class
+  class name: module-info.class
+Omitting META-INF/versions/9/module-info.class.
+[info] Assembly jar up to date: /app/kernel/kernel-api/target/delta-kernel-api-4.1.0-SNAPSHOT.jar
+[info] scalastyle Processed 324 file(s)
+[info] scalastyle Found 0 errors
+[info] scalastyle Found 0 warnings
+[info] scalastyle Found 0 infos
+[info] scalastyle Finished in 11 ms
+[success] created output: /app/spark/target
+[info] scalastyle using config /app/scalastyle-config.xml
+[info] scalastyle Processed 0 file(s)
+[info] scalastyle Found 0 errors
+[info] scalastyle Found 0 warnings
+[info] scalastyle Found 0 infos
+[info] scalastyle Finished in 0 ms
+[success] created output: /app/kernel/unitycatalog/target
+[info] scalastyle using config /app/scalastyle-config.xml
+[info] scalastyle Processed 0 file(s)
+[info] scalastyle Found 0 errors
+[info] scalastyle Found 0 warnings
+[info] scalastyle Found 0 infos
+[info] scalastyle Finished in 1 ms
+[success] created output: /app/kernel/kernel-defaults/target
+[info] Checkstyle complete. No issues found.
+[info] compiling 378 Scala sources and 7 Java sources to /app/spark-unified/target/scala-2.13/test-classes ...
+[warn] /app/spark/src/test/scala/io/delta/sql/DeltaExtensionAndCatalogSuite.scala:24:24: Unused import
+[warn] import io.delta.tables.DeltaTable
+[warn]                        ^
+[warn] /app/spark/src/test/scala/io/delta/sql/DeltaExtensionAndCatalogSuite.scala:31:39: Unused import
+[warn] import org.apache.spark.sql.functions._
+[warn]                                       ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableForNameSuite.scala:24:30: Unused import
+[warn] import org.apache.commons.io.FileUtils
+[warn]                              ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableForNameSuite.scala:29:38: Unused import
+[warn] import org.apache.spark.sql.catalyst.TableIdentifier
+[warn]                                      ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableSuite.scala:24:23: Unused import
+[warn] import scala.language.postfixOps
+[warn]                       ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableSuite.scala:32:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableSuite.scala:37:25: Unused import
+[warn] import org.apache.spark.SparkException
+[warn]                         ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableSuite.scala:39:71: Unused import
+[warn] import org.apache.spark.sql.{functions, AnalysisException, DataFrame, Dataset, QueryTest, Row}
+[warn]                                                                       ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableSuite.scala:40:51: Unused import
+[warn] import org.apache.spark.sql.execution.datasources.LogicalRelation
+[warn]                                                   ^
+[warn] /app/spark/src/test/scala/io/delta/tables/DeltaTableSuite.scala:42:30: Unused import
+[warn] import org.apache.spark.util.Utils
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/ActionSerializerSuite.scala:36:30: Unused import
+[warn] import org.apache.spark.util.Utils
+[warn]                              ^
+[error] /app/spark/src/test/scala/org/apache/spark/sql/delta/AsyncCheckpointBenchmark.scala:18:19: not found: value Utils
+[error]     val tempDir = Utils.createTempDir().getCanonicalPath
+[error]                   ^
+[error] /app/spark/src/test/scala/org/apache/spark/sql/delta/AsyncCheckpointBenchmark.scala:23:20: value DELTA_CHECKPOINT_INTERVAL is not a member of object org.apache.spark.sql.delta.sources.DeltaSQLConf
+[error]       DeltaSQLConf.DELTA_CHECKPOINT_INTERVAL.key -> checkpointInterval.toString,
+[error]                    ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AsyncCheckpointBenchmark.scala:12:24: Unused import
+[warn]   import testImplicits._
+[warn]                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:24:43: Unused import
+[warn] import org.apache.spark.sql.delta.actions.AddFile
+[warn]                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:31:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:33:29: Unused import
+[warn] import org.apache.hadoop.fs.Path
+[warn]                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:36:38: Unused import
+[warn] import org.apache.spark.sql.catalyst.TableIdentifier
+[warn]                                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:37:50: Unused import
+[warn] import org.apache.spark.sql.catalyst.expressions.Literal
+[warn]                                                  ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:40:35: Unused import
+[warn] import org.apache.spark.sql.types.StringType
+[warn]                                   ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:41:38: Unused import
+[warn] import org.apache.spark.unsafe.types.UTF8String
+[warn]                                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/AutoCompactSuite.scala:163:24: Unused import
+[warn]   import testImplicits._
+[warn]                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CheckCDCAnswer.scala:19:17: Unused import
+[warn] import java.sql.Timestamp
+[warn]                 ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CheckpointsSuite.scala:23:34: Unused import
+[warn] import scala.concurrent.duration._
+[warn]                                  ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CheckpointsSuite.scala:26:53: Unused import
+[warn] import com.databricks.spark.util.{Log4jUsageLogger, MetricDefinitions, UsageRecord}
+[warn]                                                     ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CheckpointsSuite.scala:26:72: Unused import
+[warn] import com.databricks.spark.util.{Log4jUsageLogger, MetricDefinitions, UsageRecord}
+[warn]                                                                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/ChecksumSuite.scala:227:30: Unused import
+[warn]         import testImplicits._
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneParquetSuite.scala:21:26: Unused import
+[warn] import org.apache.spark.{SparkException, SparkThrowable}
+[warn]                          ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneParquetSuite.scala:21:42: Unused import
+[warn] import org.apache.spark.{SparkException, SparkThrowable}
+[warn]                                          ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSQLSuite.scala:21:44: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{AddFile, FileAction, RemoveFile}
+[warn]                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSQLSuite.scala:21:53: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{AddFile, FileAction, RemoveFile}
+[warn]                                                     ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSQLSuite.scala:21:65: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{AddFile, FileAction, RemoveFile}
+[warn]                                                                 ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:22:44: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{AddFile, FileAction, Metadata, Protocol, RemoveFile, SetTransaction, TableFeatureProtocolUtils}
+[warn]                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:22:53: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{AddFile, FileAction, Metadata, Protocol, RemoveFile, SetTransaction, TableFeatureProtocolUtils}
+[warn]                                                     ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:22:85: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{AddFile, FileAction, Metadata, Protocol, RemoveFile, SetTransaction, TableFeatureProtocolUtils}
+[warn]                                                                                     ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:25:55: Unused import
+[warn] import org.apache.spark.sql.delta.coordinatedcommits.{CatalogOwnedTableUtils, CatalogOwnedTestBaseSuite}
+[warn]                                                       ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:29:51: Unused import
+[warn] import org.apache.spark.sql.delta.util.FileNames.{isCheckpointFile, unsafeDeltaFile}
+[warn]                                                   ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:32:71: Unused import
+[warn] import org.apache.spark.sql.{AnalysisException, DataFrame, QueryTest, Row, SparkSession}
+[warn]                                                                       ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableSuiteBase.scala:32:76: Unused import
+[warn] import org.apache.spark.sql.{AnalysisException, DataFrame, QueryTest, Row, SparkSession}
+[warn]                                                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableTestMixin.scala:27:76: Unused import
+[warn] import org.apache.spark.sql.delta.commands.{CloneDeltaSource, CloneSource, CloneSourceFormat}
+[warn]                                                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableTestMixin.scala:28:43: Unused import
+[warn] import org.apache.spark.sql.delta.sources.DeltaSQLConf
+[warn]                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableTestMixin.scala:40:30: Unused import
+[warn] import org.apache.spark.util.Utils
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CloneTableTestMixin.scala:116:24: Unused import
+[warn]   import testImplicits._
+[warn]                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/ConflictCheckerPredicateEliminationUnitSuite.scala:22:30: Unused import
+[warn] import org.apache.spark.sql.{Column, QueryTest}
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/ConflictCheckerPredicateEliminationUnitSuite.scala:24:72: Unused import
+[warn] import org.apache.spark.sql.catalyst.expressions.{Expression, Literal, Rand, ScalarSubquery}
+[warn]                                                                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/ConflictResolutionTestUtils.scala:19:30: Unused import
+[warn] import java.util.concurrent.{ExecutionException, ThreadPoolExecutor}
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/ConflictResolutionTestUtils.scala:34:44: Unused import
+[warn] import org.apache.spark.util.{ThreadUtils, Utils}
+[warn]                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CustomCatalogSuite.scala:23:97: Unused import
+[warn] import org.apache.spark.sql.delta.test.{DeltaSQLCommandTest, DummyCatalog, DummySessionCatalog, DummySessionCatalogInner}
+[warn]                                                                                                 ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/CustomCatalogSuite.scala:24:29: Unused import
+[warn] import org.apache.hadoop.fs.Path
+[warn]                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeleteMetricsSuite.scala:22:44: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{Action, AddFile, FileAction, RemoveFile}
+[warn]                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeleteMetricsSuite.scala:22:52: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{Action, AddFile, FileAction, RemoveFile}
+[warn]                                                    ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeleteMetricsSuite.scala:22:61: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{Action, AddFile, FileAction, RemoveFile}
+[warn]                                                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeleteMetricsSuite.scala:22:73: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{Action, AddFile, FileAction, RemoveFile}
+[warn]                                                                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeleteSQLSuite.scala:19:43: Unused import
+[warn] import org.apache.spark.sql.delta.sources.DeltaSQLConf
+[warn]                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeleteSuiteBase.scala:22:42: Unused import
+[warn] import org.apache.spark.{SparkThrowable, SparkUnsupportedOperationException}
+[warn]                                          ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeletionVectorsTestUtils.scala:30:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaAllFilesInCrcSuite.scala:26:69: Unused import
+[warn] import org.apache.spark.sql.delta.DeltaTestUtils.{collectUsageLogs, BOOLEAN_DOMAIN}
+[warn]                                                                     ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaAllFilesInCrcSuite.scala:34:41: Unused import
+[warn] import org.apache.spark.sql.{QueryTest, Row}
+[warn]                                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaAlterTableTests.scala:24:77: Unused import
+[warn] import org.apache.spark.sql.delta.schema.{DeltaInvariantViolationException, SchemaUtils}
+[warn]                                                                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaAlterTableTests.scala:27:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaAlterTableTests.scala:28:29: Unused import
+[warn] import org.apache.hadoop.fs.Path
+[warn]                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSQLSuite.scala:23:54: Unused import
+[warn] import org.apache.spark.sql.delta.coordinatedcommits.CatalogOwnedTableUtils
+[warn]                                                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSQLSuite.scala:25:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCStreamSuite.scala:23:23: Unused import
+[warn] import scala.language.implicitConversions
+[warn]                       ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCStreamSuite.scala:30:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCStreamSuite.scala:32:24: Unused import
+[warn] import io.delta.tables._
+[warn]                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:23:40: Unused import from deprecated object JavaConverters: Use `scala.jdk.CollectionConverters` instead
+[warn] import scala.collection.JavaConverters._
+[warn]                                        ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:27:74: Unused import
+[warn] import org.apache.spark.sql.delta.DeltaTestUtils.{modifyCommitTimestamp, BOOLEAN_DOMAIN}
+[warn]                                                                          ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:33:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:34:41: Unused import
+[warn] import org.apache.spark.sql.delta.util.{DeltaCommitFileProvider, FileNames}
+[warn]                                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:35:29: Unused import
+[warn] import org.apache.hadoop.fs.Path
+[warn]                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:37:25: Unused import
+[warn] import org.apache.spark.SparkConf
+[warn]                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:42:39: Unused import
+[warn] import org.apache.spark.sql.streaming.StreamingQueryException
+[warn]                                       ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCDCSuite.scala:44:46: Unused import
+[warn] import org.apache.spark.sql.types.{LongType, StringType, StructType}
+[warn]                                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaCheckpointWithStructColsSuite.scala:20:43: Unused import
+[warn] import org.apache.spark.sql.delta.sources.DeltaSQLConf
+[warn]                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingSuite.scala:21:22: Unused import
+[warn] import java.nio.file.Files
+[warn]                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingSuite.scala:34:29: Unused import
+[warn] import org.apache.hadoop.fs.Path
+[warn]                             ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:23:44: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{Metadata, Protocol, TableFeatureProtocolUtils}
+[warn]                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:27:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:28:25: Unused import
+[warn] import io.delta.tables.{DeltaTable => OSSDeltaTable}
+[warn]                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:32:38: Unused import
+[warn] import org.apache.spark.sql.{Column, DataFrame, DataFrameWriter, Dataset, QueryTest, Row, SparkSession}
+[warn]                                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:32:49: Unused import
+[warn] import org.apache.spark.sql.{Column, DataFrame, DataFrameWriter, Dataset, QueryTest, Row, SparkSession}
+[warn]                                                 ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:32:75: Unused import
+[warn] import org.apache.spark.sql.{Column, DataFrame, DataFrameWriter, Dataset, QueryTest, Row, SparkSession}
+[warn]                                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:32:86: Unused import
+[warn] import org.apache.spark.sql.{Column, DataFrame, DataFrameWriter, Dataset, QueryTest, Row, SparkSession}
+[warn]                                                                                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaColumnMappingTestUtils.scala:32:91: Unused import
+[warn] import org.apache.spark.sql.{Column, DataFrame, DataFrameWriter, Dataset, QueryTest, Row, SparkSession}
+[warn]                                                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLSuite.scala:28:30: Unused import
+[warn] import org.apache.hadoop.fs.{Path, UnsupportedFileSystemException}
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLSuite.scala:30:25: Unused import
+[warn] import org.apache.spark.SparkEnv
+[warn]                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLSuite.scala:33:47: Unused import
+[warn] import org.apache.spark.sql.catalyst.analysis.NoSuchPartitionException
+[warn]                                               ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLSuite.scala:34:46: Unused import
+[warn] import org.apache.spark.sql.catalyst.catalog.CatalogUtils
+[warn]                                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:22:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:26:25: Unused import
+[warn] import org.apache.spark.SparkConf
+[warn]                         ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:27:49: Unused import
+[warn] import org.apache.spark.sql.{AnalysisException, DataFrame, Dataset, QueryTest, Row}
+[warn]                                                 ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:27:60: Unused import
+[warn] import org.apache.spark.sql.{AnalysisException, DataFrame, Dataset, QueryTest, Row}
+[warn]                                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:27:80: Unused import
+[warn] import org.apache.spark.sql.{AnalysisException, DataFrame, Dataset, QueryTest, Row}
+[warn]                                                                                ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:28:38: Unused import
+[warn] import org.apache.spark.sql.catalyst.TableIdentifier
+[warn]                                      ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:29:64: Unused import
+[warn] import org.apache.spark.sql.connector.catalog.{CatalogManager, CatalogV2Util, TableCatalog}
+[warn]                                                                ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:29:79: Unused import
+[warn] import org.apache.spark.sql.connector.catalog.{CatalogManager, CatalogV2Util, TableCatalog}
+[warn]                                                                               ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:33:35: Unused import
+[warn] import org.apache.spark.sql.types.StructType
+[warn]                                   ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDDLUsingPathSuite.scala:34:30: Unused import
+[warn] import org.apache.spark.util.Utils
+[warn]                              ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDataFrameHadoopOptionsSuite.scala:25:59: Unused import
+[warn] import org.apache.spark.sql.delta.test.DeltaTestImplicits._
+[warn]                                                           ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDataFrameWriterV2Suite.scala:22:44: Unused import
+[warn] import org.apache.spark.sql.delta.actions.{Protocol, TableFeatureProtocolUtils}
+[warn]                                            ^
+[warn] /app/spark/src/test/scala/org/apache/spark/sql/delta/DeltaDataFrameWriterV2Suite.scala:23:44: Unused import
+[warn] import org.apache.spark.sql.delta.catalog.{DeltaCatalog, DeltaTableV2}
+[warn]                                            ^
+[warn] 100 warnings found
+[error] two errors found
+[error] (spark / Test / compileIncremental) Compilation failed
+[error] Total time: 85 s (01:25), completed Dec 25, 2025, 8:47:15 AM

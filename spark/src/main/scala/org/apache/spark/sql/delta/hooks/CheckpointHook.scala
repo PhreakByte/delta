@@ -16,7 +16,8 @@
 
 package org.apache.spark.sql.delta.hooks
 
-import org.apache.spark.sql.delta.CommittedTransaction
+import org.apache.spark.sql.delta.{CommittedTransaction, SnapshotManagement}
+import org.apache.spark.sql.delta.sources.DeltaSQLConf
 
 import org.apache.spark.sql.SparkSession
 
@@ -27,15 +28,25 @@ object CheckpointHook extends PostCommitHook {
   override def run(spark: SparkSession, txn: CommittedTransaction): Unit = {
     if (!txn.needsCheckpoint) return
 
-    // Since the postCommitSnapshot isn't guaranteed to match committedVersion, we have to
-    // explicitly checkpoint the snapshot at the committedVersion.
-    val cp = txn.postCommitSnapshot.checkpointProvider
-    val snapshotToCheckpoint = txn.deltaLog.getSnapshotAt(
-      txn.committedVersion,
-      lastCheckpointHint = None,
-      lastCheckpointProvider = Some(cp),
-      catalogTableOpt = txn.catalogTable,
-      enforceTimeTravelWithinDeletedFileRetention = false)
-    txn.deltaLog.checkpoint(snapshotToCheckpoint, txn.catalogTable)
+    def doCheckpoint(): Unit = {
+      // Since the postCommitSnapshot isn't guaranteed to match committedVersion, we have to
+      // explicitly checkpoint the snapshot at the committedVersion.
+      val cp = txn.postCommitSnapshot.checkpointProvider
+      val snapshotToCheckpoint = txn.deltaLog.getSnapshotAt(
+        txn.committedVersion,
+        lastCheckpointHint = None,
+        lastCheckpointProvider = Some(cp),
+        catalogTableOpt = txn.catalogTable,
+        enforceTimeTravelWithinDeletedFileRetention = false)
+      txn.deltaLog.checkpoint(snapshotToCheckpoint, txn.catalogTable)
+    }
+
+    if (spark.conf.get(DeltaSQLConf.DELTA_CHECKPOINT_ASYNC_ENABLED)) {
+      SnapshotManagement.deltaLogAsyncUpdateThreadPool.submit(spark) {
+        doCheckpoint()
+      }
+    } else {
+      doCheckpoint()
+    }
   }
 }
