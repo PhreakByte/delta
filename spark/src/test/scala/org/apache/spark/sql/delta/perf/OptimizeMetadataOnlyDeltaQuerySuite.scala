@@ -351,6 +351,16 @@ class OptimizeMetadataOnlyDeltaQuerySuite
       expectedPlan = "LocalRelation [none#0L, none#1, none#2, none#3, none#4, none#5, none#6" +
         ", none#7L, none#8L, none#9, none#10, none#11, none#12, none#13, none#14]"),
     new SqlTestParams(
+      name = "min-max - decimal column",
+      querySetup = Some(Seq(
+        "DROP TABLE IF EXISTS MyDecimalTestTable",
+        "CREATE TABLE MyDecimalTestTable (DECIMALColumn DECIMAL(10, 2)) USING DELTA",
+        "INSERT INTO MyDecimalTestTable (DECIMALColumn) VALUES (1.23), (-4.56), (7.89);"
+      )),
+      querySql = "SELECT MIN(DECIMALColumn), MAX(DECIMALColumn) FROM MyDecimalTestTable",
+      expectedPlan = "LocalRelation [none#0, none#1]"
+    ),
+    new SqlTestParams(
       name = "count-min-max - partitioned table - simple query",
       querySetup = Some(Seq(
         "CREATE TABLE TestPartitionedTable (Column1 INT, Column2 INT, Column3 INT, Column4 INT)" +
@@ -807,7 +817,7 @@ class OptimizeMetadataOnlyDeltaQuerySuite
       s"('A', -99999999999999999999999999999999999999, CAST('1900-01-01 00:00:00.0' AS TIMESTAMP)" +
       s", X'1ABF', TRUE, ARRAY(1, 2, 3), MAP(1, 10, 2, 20), STRUCT(1, 'Spark'));")
 
-    val columnNames = List("STRINGColumn", "DECIMALColumn", "TIMESTAMPColumn",
+    val columnNames = List("STRINGColumn", "TIMESTAMPColumn",
       "BINARYColumn", "BOOLEANColumn", "ARRAYColumn", "STRUCTColumn")
 
     columnNames.foreach(colName =>
