@@ -60,12 +60,12 @@ public class HDFSLogStore extends HadoopFileSystemLogStore {
             // exception when the target file exists. Hence we must make sure `exists + rename` in
             // `writeInternal` for RawLocalFileSystem is atomic in our tests.
             synchronized(this) {
-                writeInternal(path, actions, overwrite, hadoopConf);
+                writeInternal(path, actions, overwrite, hadoopConf, isLocalFs);
             }
         } else {
             // rename is atomic and also will fail when the target file exists. Not need to add the
             // extra `synchronized`.
-            writeInternal(path, actions, overwrite, hadoopConf);
+            writeInternal(path, actions, overwrite, hadoopConf, isLocalFs);
         }
     }
 
@@ -84,7 +84,8 @@ public class HDFSLogStore extends HadoopFileSystemLogStore {
             Path path,
             Iterator<String> actions,
             Boolean overwrite,
-            Configuration hadoopConf) throws IOException {
+            Configuration hadoopConf,
+            boolean isLocalFs) throws IOException {
         final FileContext fc;
         try {
             fc = FileContext.getFileContext(path.toUri(), hadoopConf);
@@ -99,7 +100,7 @@ public class HDFSLogStore extends HadoopFileSystemLogStore {
             }
         }
 
-        if (!overwrite && fc.util().exists(path)) {
+        if (isLocalFs && !overwrite && fc.util().exists(path)) {
             // This is needed for the tests to throw error with local file system
             throw new FileAlreadyExistsException(path.toString());
         }
