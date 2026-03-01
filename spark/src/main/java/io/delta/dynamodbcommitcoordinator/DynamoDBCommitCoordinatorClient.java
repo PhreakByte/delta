@@ -148,6 +148,14 @@ public class DynamoDBCommitCoordinatorClient implements CommitCoordinatorClient 
         this.readCapacityUnits = readCapacityUnits;
         this.writeCapacityUnits = writeCapacityUnits;
         this.skipPathCheck = skipPathCheck;
+
+        LOG.info("using tableName {}", coordinatedCommitsTableName);
+        LOG.info("using endpoint {}", endpoint);
+        LOG.info("using backfillBatchSize {}", backfillBatchSize);
+        LOG.info("using readCapacityUnits {}", readCapacityUnits);
+        LOG.info("using writeCapacityUnits {}", writeCapacityUnits);
+        LOG.info("using skipPathCheck {}", skipPathCheck);
+
         tryEnsureTableExists();
     }
 
@@ -287,8 +295,10 @@ public class DynamoDBCommitCoordinatorClient implements CommitCoordinatorClient 
         }
 
         try {
+            LOG.debug("updateItem {}", request);
             client.updateItem(request);
         } catch (ConditionalCheckFailedException e) {
+            LOG.debug(e.toString());
             // Conditional check failed. The exception will not indicate which condition failed.
             // We need to check the conditions ourselves by fetching the item and checking the
             // values.
@@ -670,8 +680,6 @@ public class DynamoDBCommitCoordinatorClient implements CommitCoordinatorClient 
 
         return tableConf;
     }
-
-    // Copied from DynamoDbLogStore. TODO: add the logging back.
 
     /**
      * Ensures that the table used to store commits from all Delta tables exists. If the table
