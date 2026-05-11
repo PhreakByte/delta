@@ -16,12 +16,16 @@
 
 package org.apache.spark.sql.delta.hooks
 
-import org.apache.spark.sql.delta.CommittedTransaction
+import scala.util.control.NonFatal
+
+import org.apache.spark.sql.delta.{CommittedTransaction, SnapshotManagement}
+import org.apache.spark.sql.delta.metering.DeltaLogging
+import org.apache.spark.sql.delta.sources.DeltaSQLConf
 
 import org.apache.spark.sql.SparkSession
 
 /** Write a new checkpoint at the version committed by the txn if required. */
-object CheckpointHook extends PostCommitHook {
+object CheckpointHook extends PostCommitHook with DeltaLogging {
   override val name: String = "Post commit checkpoint trigger"
 
   override def run(spark: SparkSession, txn: CommittedTransaction): Unit = {
@@ -36,6 +40,39 @@ object CheckpointHook extends PostCommitHook {
       lastCheckpointProvider = Some(cp),
       catalogTableOpt = txn.catalogTable,
       enforceTimeTravelWithinDeletedFileRetention = false)
-    txn.deltaLog.checkpoint(snapshotToCheckpoint, txn.catalogTable)
+
+    if (spark.sessionState.conf.getConf(DeltaSQLConf.DELTA_CHECKPOINT_ASYNC_ENABLED)) {
+      try {
+        val jobGroup = spark.sparkContext.getLocalProperty(
+          org.apache.spark.SparkContext.SPARK_JOB_GROUP_ID)
+        SnapshotManagement.deltaLogAsyncUpdateThreadPool.submit(spark) {
+          spark.sparkContext.setLocalProperty("spark.scheduler.pool", "deltaStateUpdatePool")
+          spark.sparkContext.setJobGroup(
+            jobGroup,
+            s"Asynchronously checkpointing Delta table at ${txn.deltaLog.dataPath}",
+            interruptOnCancel = true)
+          SparkSession.setActiveSession(spark)
+          try {
+            txn.deltaLog.checkpoint(snapshotToCheckpoint, txn.catalogTable)
+          } catch {
+            case NonFatal(e) =>
+              recordDeltaEvent(
+                txn.deltaLog,
+                "delta.checkpoint.async.error",
+                data = Map("exception" -> e.getMessage))
+          }
+        }
+      } catch {
+        case NonFatal(e) =>
+          recordDeltaEvent(
+            txn.deltaLog,
+            "delta.checkpoint.async.submit.error",
+            data = Map("exception" -> e.getMessage))
+          // Fallback to synchronous checkpointing if async submission fails
+          txn.deltaLog.checkpoint(snapshotToCheckpoint, txn.catalogTable)
+      }
+    } else {
+      txn.deltaLog.checkpoint(snapshotToCheckpoint, txn.catalogTable)
+    }
   }
 }

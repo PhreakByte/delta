@@ -890,6 +890,12 @@ trait DeltaSQLConfBase extends DeltaSQLConfUtils {
       .booleanConf
       .createWithDefault(false)
 
+  val DELTA_CHECKPOINT_ASYNC_ENABLED =
+    buildConf("checkpoint.async.enabled")
+      .doc("Whether to checkpoint asynchronously.")
+      .booleanConf
+      .createWithDefault(false)
+
   val DELTA_ASYNC_UPDATE_STALENESS_TIME_LIMIT =
     buildConf("stalenessLimit")
       .doc(
