@@ -173,9 +173,11 @@ class DeltaTable(object):
     merge.__doc__ = LocalDeltaTable.merge.__doc__
 
     def vacuum(self, retentionHours: Optional[float] = None) -> DataFrame:
+        from pyspark.sql.types import StructType, StructField, StringType
         command = Vacuum(self._to_proto(), retentionHours).command(session=self._spark.client)
         self._spark.client.execute_command(command)
-        return None  # TODO: Return empty DataFrame
+        schema = StructType([StructField("path", StringType(), True)])
+        return self._spark.createDataFrame([], schema)
 
     vacuum.__doc__ = LocalDeltaTable.vacuum.__doc__
 
