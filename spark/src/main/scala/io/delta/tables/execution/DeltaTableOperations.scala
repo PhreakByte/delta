@@ -103,7 +103,6 @@ trait DeltaTableOperations extends AnalysisHelper { self: io.delta.tables.DeltaT
       vacuumType = None,
       deltaLog.options)
     toDataset(sparkSession, vacuum)
-    sparkSession.emptyDataFrame
   }
 
   protected def executeRestore(
