@@ -727,8 +727,12 @@ class DeltaTable(object):
         jbuilder = self._jdt.optimize()
         return DeltaOptimizeBuilder(self._spark, jbuilder)
 
-    def clone(  # type: ignore[no-untyped-def]
-        self, target, isShallow=False, replace=False, properties=None
+    def clone(
+        self,
+        target: str,
+        isShallow: bool = False,
+        replace: bool = False,
+        properties: Optional[Dict[str, str]] = None
     ) -> "DeltaTable":
         """
         Clone the latest state of a DeltaTable to a destination which mirrors the existing
@@ -754,8 +758,13 @@ class DeltaTable(object):
         DeltaTable._verify_clone_types(target, isShallow, replace, properties)
         return self._jdt.clone(target, isShallow, replace, properties)
 
-    def cloneAtVersion(  # type: ignore[no-untyped-def]
-        self, version, target, isShallow=False, replace=False, properties=None
+    def cloneAtVersion(
+        self,
+        version: int,
+        target: str,
+        isShallow: bool = False,
+        replace: bool = False,
+        properties: Optional[Dict[str, str]] = None
     ) -> "DeltaTable":
         """
         Clone a DeltaTable at the given version to a destination which mirrors the existing
@@ -784,8 +793,13 @@ class DeltaTable(object):
         DeltaTable._verify_clone_types(target, isShallow, replace, properties, version=version)
         return self._jdt.cloneAtVersion(version, target, isShallow, replace, properties)
 
-    def cloneAtTimestamp(  # type: ignore[no-untyped-def]
-        self, timestamp, target, isShallow=False, replace=False, properties=None
+    def cloneAtTimestamp(
+        self,
+        timestamp: str,
+        target: str,
+        isShallow: bool = False,
+        replace: bool = False,
+        properties: Optional[Dict[str, str]] = None
     ) -> "DeltaTable":
         """
         Clone a DeltaTable at the given timestamp to a destination which mirrors the existing
@@ -824,7 +838,7 @@ class DeltaTable(object):
         target: str,
         isShallow: bool,
         replace: bool,
-        properties: dict,
+        properties: Optional[Dict[str, str]],
         timestamp: str = "",
         version: int = 0
     ) -> None:
