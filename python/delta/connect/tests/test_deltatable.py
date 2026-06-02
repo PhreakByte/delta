@@ -17,8 +17,10 @@
 import os
 import unittest
 import sys
+import warnings
 
 from delta.connect.testing.utils import DeltaTestCase
+from pyspark.sql.types import StructType, StructField, StringType
 
 path_to_delta_connect_tests_folder = os.path.dirname(os.path.abspath(__file__))
 path_to_delta_folder = os.path.dirname(os.path.dirname(path_to_delta_connect_tests_folder))
@@ -31,6 +33,15 @@ class DeltaTableTests(DeltaTableTestsMixin, DeltaTestCase):
     @unittest.skip("relies on jvm")
     def test_verify_paritionedBy_compatibility(self):
         pass
+
+    def test_vacuum_returns_empty_dataframe(self):
+        from delta.connect.tables import DeltaTable
+
+        self.spark.sql("CREATE TABLE default.test_table_vacuum (id INT) USING delta")
+        dt = DeltaTable.forName(self.spark, "default.test_table_vacuum")
+        result_df = dt.vacuum()
+        expected_schema = StructType([StructField("path", StringType(), True)])
+        self.assertEqual(result_df.schema, expected_schema)
 
 
 if __name__ == "__main__":
