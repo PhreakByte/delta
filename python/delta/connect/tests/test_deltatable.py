@@ -32,6 +32,10 @@ class DeltaTableTests(DeltaTableTestsMixin, DeltaTestCase):
     def test_verify_paritionedBy_compatibility(self):
         pass
 
+    @unittest.skip("relies on jvm")
+    def test_vacuum(self) -> None:
+        pass
+
 
 if __name__ == "__main__":
     try:
