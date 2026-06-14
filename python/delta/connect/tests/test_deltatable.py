@@ -32,6 +32,26 @@ class DeltaTableTests(DeltaTableTestsMixin, DeltaTestCase):
     def test_verify_paritionedBy_compatibility(self):
         pass
 
+    def test_vacuum_return_empty_dataframe(self):
+        # Setup a delta table and call vacuum
+        # Using tempFile from DeltaTestCase
+        df = self.spark.createDataFrame([('a', 1), ('b', 2), ('c', 3)], ["key", "value"])
+        df.write.format("delta").save(self.tempFile)
+
+        from delta.connect.tables import DeltaTable
+        dt = DeltaTable.forPath(self.spark, self.tempFile)
+
+        # Test default vacuum
+        res = dt.vacuum()
+        self.assertIsNotNone(res)
+
+        # Test schema matches structurally expected Empty DataFrame with path column
+        from pyspark.sql.types import StructType, StructField, StringType
+        expected_schema = StructType([StructField("path", StringType(), True)])
+        self.assertEqual(res.schema, expected_schema)
+        self.assertEqual(res.collect(), [])
+
+
 
 if __name__ == "__main__":
     try:
