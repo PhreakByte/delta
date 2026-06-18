@@ -40,9 +40,15 @@ class DeltaSqlTests(DeltaTestCase):
     def test_vacuum(self) -> None:
         self.spark.sql("set spark.databricks.delta.retentionDurationCheck.enabled = false")
         try:
-            deleted_files = self.spark.sql("VACUUM '%s' RETAIN 0 HOURS" % self.tempFile).collect()
+            res = self.spark.sql("VACUUM '%s' RETAIN 0 HOURS" % self.tempFile)
+            deleted_files = res.collect()
             # Verify `VACUUM` did delete some data files
             self.assertTrue(self.tempFile in deleted_files[0][0])
+
+            # Verify schema
+            from pyspark.sql.types import StructType, StructField, StringType
+            expected_schema = StructType([StructField("path", StringType(), True)])
+            self.assertEqual(res.schema, expected_schema)
         finally:
             self.spark.sql("set spark.databricks.delta.retentionDurationCheck.enabled = true")
 
