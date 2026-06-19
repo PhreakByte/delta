@@ -103,7 +103,10 @@ trait DeltaTableOperations extends AnalysisHelper { self: io.delta.tables.DeltaT
       vacuumType = None,
       deltaLog.options)
     toDataset(sparkSession, vacuum)
-    sparkSession.emptyDataFrame
+    val targetStructType = org.apache.spark.sql.types.StructType(Seq(
+      org.apache.spark.sql.types.StructField("path", org.apache.spark.sql.types.StringType, nullable = true)
+    ))
+    sparkSession.createDataFrame(sparkSession.sparkContext.emptyRDD[org.apache.spark.sql.Row], targetStructType)
   }
 
   protected def executeRestore(
