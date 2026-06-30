@@ -1,0 +1,55 @@
+1. Title
+[PYTHON][CONNECT] Fix DeltaTable.vacuum() to return an empty DataFrame in Delta Connect
+
+2. Affected area
+- module: python/delta/connect
+- file: python/delta/connect/tables.py
+- function or rule name: `DeltaTable.vacuum`
+- Spark version or branch: Main / Connect
+
+3. Problem statement
+The `DeltaTable.vacuum()` method in the Delta Connect Python client returns `None`, contrary to the classic PySpark Delta client, which correctly returns an empty DataFrame with the schema `struct<path:string>`. The `None` return value can cause unexpected `AttributeError`s when users chain DataFrame operations (like `.count()`) that work seamlessly in the classic implementation.
+
+4. Reproduction testcase
+```python
+from pyspark.sql import SparkSession
+from delta import DeltaTable
+
+spark = SparkSession.builder.getOrCreate()
+spark.createDataFrame([('a', 1)]).write.format("delta").save("/tmp/delta-table")
+dt = DeltaTable.forPath(spark, "/tmp/delta-table")
+
+res = dt.vacuum()
+# In classic PySpark, res is a DataFrame and res.count() == 0
+# In Connect, res is None, raising AttributeError: 'NoneType' object has no attribute 'count'
+```
+
+5. Root cause
+In `python/delta/connect/tables.py`, the `vacuum` method executes the vacuum command via RPC but explicitly returns `None` with a comment `# TODO: Return empty DataFrame`.
+
+6. Fix
+Replaced the `return None` statement in `DeltaTable.vacuum` with `return self._spark.createDataFrame([], "path STRING")`, which correctly instantiates an empty DataFrame with a single string column `path`, mirroring the classic PySpark implementation.
+
+7. Verification
+Verified by modifying the existing `test_vacuum` function in `DeltaTableTestsMixin` (which runs against both classic and Connect clients) to assert that `vacuum()` returns a non-None DataFrame, has the correct `struct<path:string>` schema, and returns a row count of 0.
+
+8. Impact
+Correctness and API parity impact. This ensures that PySpark Delta Connect users can seamlessly migrate their `vacuum` logic from classic PySpark without encountering unexpected `NoneType` errors.
+
+9. PR-ready summary
+Fix `DeltaTable.vacuum()` in Spark Connect to return an empty DataFrame instead of `None`, aligning it with classic PySpark Delta behavior.
+
+### What changes were proposed in this pull request?
+This PR modifies the `DeltaTable.vacuum()` method in the Delta Connect Python client (`python/delta/connect/tables.py`) to return an empty DataFrame with a single string column `path`, rather than returning `None`.
+
+### Why are the changes needed?
+The classic PySpark Delta implementation of `vacuum()` returns an empty DataFrame. The Connect implementation contained a `TODO` to return an empty DataFrame but instead returned `None`. This discrepancy breaks API parity and causes user code that checks the result of `vacuum()` (e.g., calling `.count()`) to fail with an `AttributeError` when migrating to Spark Connect.
+
+### Does this PR introduce any user-facing change?
+Yes, the Python Delta Connect `vacuum()` method now correctly returns an empty PySpark DataFrame (schema: `path STRING`) instead of `None`, making it consistent with the classic implementation.
+
+### How was this patch tested?
+Modified the shared `test_vacuum` unit test in `python/delta/tests/test_deltatable.py` (which runs in both classic and Connect environments) to verify that `vacuum` returns a DataFrame with the correct schema and row count. Ran the Python test suite and mypy locally.
+
+### Was this patch authored or co-authored using generative AI tooling?
+No
