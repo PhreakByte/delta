@@ -592,7 +592,15 @@ class DeltaTableTestsMixin:
         self.__createFile('abc.txt', 'abcde')
         self.__createFile('bac.txt', 'abcdf')
         self.assertEqual(True, self.__checkFileExists('abc.txt'))
-        dt.vacuum()  # will not delete files as default retention is used.
+
+        # Test vacuum() returns empty DataFrame with correct schema
+        res = dt.vacuum()  # will not delete files as default retention is used.
+        self.assertEqual(res.schema.simpleString(), 'struct<path:string>')
+        try:
+            self.assertTrue(res.isEmpty())
+        except AttributeError:
+            self.assertEqual(res.count(), 0)
+
         dt.vacuum(1000)  # test whether integers work
 
         self.assertEqual(True, self.__checkFileExists('bac.txt'))
