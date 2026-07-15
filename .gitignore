@@ -140,3 +140,4 @@ kernel/kernel-benchmarks/benchmark_report.json
 spark/unitycatalog/etc/
 .scala-build/
 
+.mypy_cache/
