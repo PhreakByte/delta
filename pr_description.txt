@@ -1,0 +1,59 @@
+1. Title
+Fix `DeltaTable.vacuum()` to return an empty DataFrame with the correct schema in PySpark Connect
+
+2. Affected area
+- module: python/delta
+- file: python/delta/connect/tables.py, python/delta/tests/test_deltatable.py
+- function or rule name: `DeltaTable.vacuum()`
+
+3. Problem statement
+In PySpark Connect Delta implementation, `DeltaTable.vacuum()` incorrectly returns `None` when it is expected to return an empty DataFrame with the schema `StructType([StructField("path", StringType(), True)])`, matching the classic PySpark Delta behavior. This causes problems for callers who expect to operate on the returned DataFrame.
+
+4. Reproduction testcase
+The testcase modified in this PR `python/delta/tests/test_deltatable.py:DeltaTableTestsMixin.test_vacuum`:
+
+```python
+    def test_vacuum(self) -> None:
+        self.__writeDeltaTable([('a', 1), ('b', 2), ('c', 3)])
+        dt = DeltaTable.forPath(self.spark, self.tempFile)
+        self.__createFile('abc.txt', 'abcde')
+        self.__createFile('bac.txt', 'abcdf')
+        self.assertEqual(True, self.__checkFileExists('abc.txt'))
+        df_vacuum = dt.vacuum()  # will not delete files as default retention is used.
+        self.assertEqual(df_vacuum.schema.simpleString(), 'struct<path:string>')
+        df_vacuum_int = dt.vacuum(1000)  # test whether integers work
+        self.assertEqual(df_vacuum_int.schema.simpleString(), 'struct<path:string>')
+```
+
+Prior to this fix, the test would raise an `AttributeError` on `df_vacuum.schema` because `df_vacuum` is `None` in Spark Connect environment.
+
+5. Root cause
+In `python/delta/connect/tables.py`, `vacuum()` returns `None` with a comment `# TODO: Return empty DataFrame`.
+
+6. Fix
+Update `vacuum()` in `python/delta/connect/tables.py` to create and return an empty DataFrame with the schema `path: string` using `self._spark.createDataFrame([], StructType([StructField("path", StringType(), True)]))`.
+
+7. Verification
+Tested locally with PySpark. The test `test_vacuum` verifies that the return type has the expected schema string `struct<path:string>`. Both classic and Connect implementations of PySpark Delta share `DeltaTableTestsMixin`, meaning the test applies to both implementations.
+
+8. Impact
+Correctness and API parity impact. PySpark Connect Delta users will now receive the expected empty DataFrame with the correct schema, matching the classic PySpark Delta implementation and maintaining expected behavior.
+
+9. PR-ready summary
+Fix `DeltaTable.vacuum()` in PySpark Connect to return an empty DataFrame with the correct schema (`StructType([StructField("path", StringType(), True)])`) instead of `None`.
+
+
+### What changes were proposed in this pull request?
+This PR updates `DeltaTable.vacuum()` in the PySpark Connect implementation (`python/delta/connect/tables.py`) to return an empty DataFrame with the schema `StructType([StructField("path", StringType(), True)])`, matching the behavior of the classic PySpark Delta implementation.
+
+### Why are the changes needed?
+In the PySpark Connect implementation, `vacuum()` previously returned `None`. This broke compatibility with the classic PySpark Delta API, which returns an empty DataFrame with a specific schema. Callers expecting a DataFrame would encounter `AttributeError`s when attempting to interact with the result.
+
+### Does this PR introduce any user-facing change?
+Yes. PySpark Connect users calling `DeltaTable.vacuum()` will now receive an empty DataFrame with the `path: string` schema rather than `None`. This restores API parity with the classic PySpark Delta behavior.
+
+### How was this patch tested?
+The fix was tested by updating `DeltaTableTestsMixin.test_vacuum` in `python/delta/tests/test_deltatable.py` to verify that the returned DataFrame has the schema `struct<path:string>`. Since `DeltaTableTestsMixin` is shared between classic and Connect tests, it verifies the behavior for both environments.
+
+### Was this patch authored or co-authored using generative AI tooling?
+No
