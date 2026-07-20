@@ -592,13 +592,28 @@ class DeltaTableTestsMixin:
         self.__createFile('abc.txt', 'abcde')
         self.__createFile('bac.txt', 'abcdf')
         self.assertEqual(True, self.__checkFileExists('abc.txt'))
-        dt.vacuum()  # will not delete files as default retention is used.
-        dt.vacuum(1000)  # test whether integers work
+        res1 = dt.vacuum()  # will not delete files as default retention is used.
+        self.assertEqual("struct<path:string>", res1.schema.simpleString())
+        try:
+            self.assertTrue(res1.isEmpty())
+        except AttributeError:
+            self.assertEqual(0, res1.count())
+        res2 = dt.vacuum(1000)  # test whether integers work
+        self.assertEqual("struct<path:string>", res2.schema.simpleString())
+        try:
+            self.assertTrue(res2.isEmpty())
+        except AttributeError:
+            self.assertEqual(0, res2.count())
 
         self.assertEqual(True, self.__checkFileExists('bac.txt'))
         retentionConf = "spark.databricks.delta.retentionDurationCheck.enabled"
         self.spark.conf.set(retentionConf, "false")
-        dt.vacuum(0.0)
+        res3 = dt.vacuum(0.0)
+        self.assertEqual("struct<path:string>", res3.schema.simpleString())
+        try:
+            self.assertTrue(res3.isEmpty())
+        except AttributeError:
+            self.assertEqual(0, res3.count())
         self.spark.conf.set(retentionConf, "true")
         self.assertEqual(False, self.__checkFileExists('bac.txt'))
         self.assertEqual(False, self.__checkFileExists('abc.txt'))
