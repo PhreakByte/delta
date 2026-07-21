@@ -72,7 +72,7 @@ from pyspark.sql.connect.dataframe import DataFrame
 from pyspark.sql.connect.plan import LogicalPlan, SubqueryAlias
 from pyspark.sql.connect.session import SparkSession
 from pyspark.sql.connect.types import pyspark_types_to_proto_types
-from pyspark.sql.types import DataType, StructField, StructType
+from pyspark.sql.types import DataType, StringType, StructField, StructType
 
 
 class DeltaTable(object):
@@ -175,7 +175,9 @@ class DeltaTable(object):
     def vacuum(self, retentionHours: Optional[float] = None) -> DataFrame:
         command = Vacuum(self._to_proto(), retentionHours).command(session=self._spark.client)
         self._spark.client.execute_command(command)
-        return None  # TODO: Return empty DataFrame
+        return self._spark.createDataFrame(
+            [], schema=StructType([StructField("path", StringType(), True)])
+        )
 
     vacuum.__doc__ = LocalDeltaTable.vacuum.__doc__
 
